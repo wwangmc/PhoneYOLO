@@ -1,0 +1,5 @@
+# Versions used to create the bundled test model. CPU-only torch is sufficient.
+torch==2.8.0
+torchvision==0.23.0
+ultralytics==8.3.211
+coremltools==8.3.0

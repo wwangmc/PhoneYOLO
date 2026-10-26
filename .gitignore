@@ -1,0 +1,10 @@
+.theos/
+packages/
+*.deb
+*.log
+.DS_Store
+.cache/
+Ultralytics/
+__pycache__/
+*.exe
+*.obj

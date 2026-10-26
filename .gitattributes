@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.mlmodel binary
+*.jpg binary
+*.png binary
+Makefile text eol=lf
+control text eol=lf
+*.xm text diff merge eol=lf
+*.plist text eol=lf
+*.yml text eol=lf
+*.sh text eol=lf

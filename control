@@ -1,0 +1,9 @@
+Package: com.example.phoneyolo
+Name: PhoneYOLO
+Version: 0.1.0
+Architecture: iphoneos-arm
+Description: On-demand YOLOv8 screen detection with WebSocket streaming
+Maintainer: Developer
+Author: Developer
+Section: Utilities
+Depends: mobilesubstrate, firmware (>= 14.0)

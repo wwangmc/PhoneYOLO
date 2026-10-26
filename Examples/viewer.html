@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhoneYOLO 检测结果</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101722;color:#eaf2ff;font:15px system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:32px}h1{font-size:28px;margin-bottom:8px}p{color:#9aadc8;line-height:1.7}.connect{display:flex;gap:10px;margin:24px 0}input{flex:1;min-width:0;padding:14px;color:inherit;background:#1c2839;border:1px solid #41536c;border-radius:8px}button{padding:12px 20px;background:#42dab3;color:#0c2521;border:0;border-radius:8px;cursor:pointer}button:disabled{opacity:.5;cursor:default}.layout{display:grid;grid-template-columns:minmax(220px,1fr) minmax(250px,1fr);gap:24px}canvas{width:100%;max-height:68vh;object-fit:contain;background:#172233;border-radius:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:68vh;overflow:auto;background:#172233;padding:20px;border-radius:12px;font-size:12px}#status{color:#42dab3}@media(max-width:700px){main{padding:20px}.layout{grid-template-columns:1fr}.connect{flex-wrap:wrap}input{flex-basis:100%}}
+</style>
+<main><h1>PhoneYOLO</h1><p>粘贴手机应用里复制的 WebSocket 地址。有连接时才检测；断开后手机自动停止检测。左侧仅显示检测框位置，不传输屏幕图片。</p>
+<div class="connect"><input id="url" placeholder="ws://192.168.1.10:8765/detections?token=…" aria-label="WebSocket 地址" autocomplete="off"><button id="connect">连接</button><button id="disconnect" disabled>断开</button></div>
+<p id="status">未连接</p><div class="layout"><canvas id="canvas" width="390" height="844"></canvas><pre id="json">等待检测结果…</pre></div></main>
+<script>
+let socket=null;const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+$('connect').onclick=()=>{
+  const url=$('url').value.trim();if(!/^wss?:\/\//.test(url)){$('status').textContent='请输入 ws:// 或 wss:// 地址';return}
+  if(socket)socket.close();let ws;try{ws=new WebSocket(url)}catch(e){$('status').textContent=e.message;return}socket=ws;
+  $('connect').disabled=true;$('disconnect').disabled=false;$('status').textContent='正在连接…';
+  ws.onopen=()=>{if(socket===ws)$('status').textContent='已连接，等待检测…'};
+  ws.onmessage=event=>{if(socket!==ws)return;let r;try{r=JSON.parse(event.data)}catch{return}$('json').textContent=JSON.stringify(r,null,2);
+    if(r.type==='error'){$('status').textContent=r.message;return}if(r.type!=='detections')return;
+    $('status').textContent=`第 ${r.sequence} 帧 · ${r.detections.length} 个目标 · ${r.latencyMs.toFixed(1)} ms`;
+    canvas.width=r.screen.width;canvas.height=r.screen.height;ctx.clearRect(0,0,canvas.width,canvas.height);
+    const scale=Math.max(1,canvas.width/390);ctx.lineWidth=2*scale;ctx.font=`${13*scale}px system-ui`;
+    for(const detection of r.detections){const b=detection.box;ctx.strokeStyle='#42dab3';ctx.fillStyle='#42dab3';ctx.strokeRect(b.x,b.y,b.width,b.height);ctx.fillText(`${detection.label} ${(detection.confidence*100).toFixed(0)}%`,b.x,Math.max(15*scale,b.y-5*scale))}
+  };
+  ws.onerror=()=>{if(socket===ws)$('status').textContent='连接失败：检查服务、IP、端口和 token'};
+  ws.onclose=()=>{if(socket!==ws)return;socket=null;$('connect').disabled=false;$('disconnect').disabled=true;$('status').textContent='已断开'};
+};
+$('disconnect').onclick=()=>socket?.close();window.addEventListener('beforeunload',()=>socket?.close());
+</script></html>
