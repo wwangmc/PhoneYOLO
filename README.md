@@ -123,13 +123,13 @@ gmake TYPE=1 FINALPACKAGE=1 package
 
 Windows 用户可把 **PhoneYOLO 目录内的内容**放在独立 GitHub 仓库根目录（包含现成模型、App、Sources 和隐藏 `.github` 目录），在 **Actions → Build Theos packages → Run workflow** 编译。工作流也在 main/master 的 push/PR 上运行。Artifacts 中的 `PhoneYOLO-rootfull/rootless/roothide` 含 `.deb` 和 SHA256，`build-log-*` 含构建日志。
 
-工作流在打包前执行算法测试、原生 WebSocket 回环测试、Core ML 编译/推理冒烟检查。当前会话没有创建远程仓库、推送或运行 Actions。
+工作流在打包前执行算法测试、原生 WebSocket 回环测试、Core ML 编译/推理冒烟检查。已在独立[私有仓库](https://github.com/wwangmc/PhoneYOLO)实际完成三模式编译，[成功运行记录](https://github.com/wwangmc/PhoneYOLO/actions/runs/40287739106)。
 
 ## 验证范围与限制
 
 本地验证记录见 `VERIFICATION.md`。Windows 已实际生成模型、检查模型结构和 SHA256、运行 PyTorch 参考推理、验证 C++ 解码/NMS 与参考结果一致，并使用 iOS SDK 头文件检查 Objective-C/Objective-C++ 源码。
 
-**尚未产出或验证 iOS `.deb`，尚未做 iPhone 实机测试。** macOS 回环和 Core ML 原生冒烟测试已加入 CI，但本地 Windows 无法执行。不能将源码检查等同于已编译或已在手机运行。
+**三种 iOS `.deb` 已编译成功；macOS WebSocket 回环和 Core ML 原生冒烟测试已通过。尚未做 iPhone 安装后的实机测试。** 当前 USB 连接的手机已确认为 iPhone X / iOS 16.1.1 / rootless，使用 rootless 包。二进制和校验记录在 `packages/`。
 
 全屏抓取依赖私有 `CARenderServerRenderDisplay`；系统升级、越狱环境、受保护视频或锁屏状态可能限制可捕获内容。横竖屏坐标、实际 FPS、温度、功耗及长时间稳定性必须在目标手机验证。
 

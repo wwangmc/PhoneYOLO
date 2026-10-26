@@ -14,11 +14,13 @@
 - 检查 3 个 plist、模型哈希、源码 UTF-8/LF、workflow YAML 和三种编译矩阵，通过。
 - Python 脚本语法检查；浏览器查看器 JavaScript 语法检查，通过。
 
-## 已准备但未在本机运行
+## 已在 macOS 云端执行并通过
 
-- `Tests/websocket_integration.py`：需要 macOS，运行真实 Objective-C++ 服务的回环握手、token、多个客户端、Ping/Pong、关闭、拒绝未掩码数据和同端口重启测试。
-- `Tests/model_smoke.swift`：需要 macOS Core ML，编译实际模型、运行推理并验证输出维度和有限数值。
-- GitHub Actions 的 rootfull/rootless/RootHide 三种实际 `.deb` 编译、签名和打包；工作流已配置，但当前没有推送或触发。
+- `Tests/websocket_integration.py`：真实 Objective-C++ 服务的回环握手、token、多个客户端、Ping/Pong、关闭、拒绝未掩码数据和同端口重启，共 5 项测试通过。
+- `Tests/model_smoke.swift`：编译实际 Core ML 模型并运行原生推理，输出 `[1,84,8400]`，有限数值检查通过。
+- rootfull/rootless/RootHide 三种实际 `.deb` 编译、签名和打包全部成功，App 和插件均包含 arm64 / arm64e。
+- 成功运行：https://github.com/wwangmc/PhoneYOLO/actions/runs/40287739106；二进制对应源码 `8928fed7fd1941bbc32754188481f5cc57f09e76`。
+- 实际编译过程中修复了已弃用的方向 API 和 Objective-C/C++ 共享函数链接声明。
 
 ## 尚需目标 iPhone 验证
 
@@ -26,4 +28,4 @@
 - 切换至其他 App 后的检测、竖屏/两个横屏方向的画面和像素坐标、连接/断线/重连与多个客户端。
 - 最后一名客户端断开后的资源释放、实际 FPS、长时间功耗/内存和温度。
 
-因此当前交付是完整工程源码、真实测试模型和打包/验证流程，不能视为已编译或已在手机运行的二进制成品。
+当前交付包含实际编译的安装包；安装和系统截图/检测链路仍需在手机验证。已通过 USB 只读查询确认当前设备为 iPhone X（iPhone10,3）/ iOS 16.1.1，包架构为 `iphoneos-arm64`，对应 rootless。
