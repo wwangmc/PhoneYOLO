@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-NSString *PYDataDirectory(void);
-NSString *PYBundledModel(void);
-NSDictionary *PYReadConfig(void);
-BOOL PYWriteConfig(NSDictionary *config, NSError **error);
-BOOL PYWriteJSON(NSDictionary *value, NSString *path, NSError **error);
-extern const char *PYConfigNotification;
+FOUNDATION_EXPORT NSString *PYDataDirectory(void);
+FOUNDATION_EXPORT NSString *PYBundledModel(void);
+FOUNDATION_EXPORT NSDictionary *PYReadConfig(void);
+FOUNDATION_EXPORT BOOL PYWriteConfig(NSDictionary *config, NSError **error);
+FOUNDATION_EXPORT BOOL PYWriteJSON(NSDictionary *value, NSString *path, NSError **error);
+FOUNDATION_EXPORT const char *PYConfigNotification;
