@@ -139,7 +139,14 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         CGSize native = UIScreen.mainScreen.nativeBounds.size;
         native = CGSizeMake(MIN(native.width, native.height), MAX(native.width, native.height));
-        UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
+        UIInterfaceOrientation orientation = UIInterfaceOrientationPortrait;
+        for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+            if ([scene isKindOfClass:UIWindowScene.class] &&
+                scene.activationState == UISceneActivationStateForegroundActive) {
+                orientation = ((UIWindowScene *)scene).interfaceOrientation;
+                break;
+            }
+        }
         SEL selector = NSSelectorFromString(@"activeInterfaceOrientation");
         if ([UIApplication.sharedApplication respondsToSelector:selector])
             orientation =
